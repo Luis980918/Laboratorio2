@@ -8,8 +8,10 @@
 
 int main(){
     int pid;
+    int cerrar = 1;
+    char * lectura;
 
-    printf("PADRE: Soy el proceso padre y mi pid es: %d\n", getpid());
+    /*printf("PADRE: Soy el proceso padre y mi pid es: %d\n", getpid());
     pid = fork();
     
 
@@ -27,5 +29,16 @@ int main(){
     {
         printf("HIJO: Soy el proceso hijo y mi pid es: %d\n", getpid());
         printf("HIJO: mi padre tiene el pid: %d\n", getpid());
+    }*/
+
+    while (cerrar != 0){
+        printf("Wish\n");
+        scanf("%s", lectura);
+        if(lectura == 0){
+         cerrar = 0;
+        }
+       
     }
+
+
 }
