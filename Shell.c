@@ -16,9 +16,13 @@ int main(){
     printf("wish> ");
     fgets(b, 101, stdin);
     delim=strtok(b, " ");
+    if(b[strlen(delim)-1]=='\n'){
+        b[strlen(delim)-1]='\0';
+    }
+    
     while(delim!=NULL){
         if(c==1){
-            printf("%s\n", delim); 
+            printf("%s", delim);
         }
         delim=strtok(NULL, " "); 
         c++;
