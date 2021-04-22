@@ -7,32 +7,36 @@
 
 int main(){
     
-    char b[20];
+    char b[101];
     char *delim;
+    int c=0;
+
     do{
 
-     printf("wish> ");
-     scanf("%s",b);
-    printf("%c\n",b[strlen(b)-1]);
-    if(b[strlen(b)+1]==' '){
-        b[strlen(b)+1]=',';
-        //delim=strtok(b, '\0');
-        printf("%s\n", b);
-        if(strcmp(b, "cd")==0){
-         printf("Ejecutando cd\n");
+    printf("wish> ");
+    fgets(b, 101, stdin);
+    delim=strtok(b, " ");
+    while(delim!=NULL){
+        if(c==1){
+            printf("%s\n", delim); 
+        }
+        delim=strtok(NULL, " "); 
+        c++;
+    }
+    c=0;
+    if(strcmp(b, "cd")==0){
+    printf("Ejecutando cd\n");
+    }else{
+        if(strcmp(b, "ls")==0){
+        printf("Ejecutando ls\n");
         }else{
-            if(strcmp(b, "ls")==0){
-            printf("Ejecutando ls\n");
-            }else{
-                if(strcmp(b, "path")==0){
+            if(strcmp(b, "path")==0){
                 printf("Ejecutando path\n");
                 }else{
                     printf("Comando erroneo, verifique en la ruta path\n");
                 }
             }
         }
-    }
-
     }while(strcmp(b, "exit")!=0);
     return(0);
 }
