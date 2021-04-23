@@ -28,19 +28,21 @@ int main(){
         c++;
     }
     c=0;
-    if(strcmp(b, "cd")==0){
-    printf("Ejecutando cd\n");
-    }else{
-        if(strcmp(b, "ls")==0){
-        printf("Ejecutando ls\n");
-        }else{
-            if(strcmp(b, "path")==0){
-                printf("Ejecutando path\n");
+    if(strcmp(b, "exit")!=0){
+        if(strcmp(b, "cd")==0){
+            printf("Ejecutando cd\n");
+            }else{
+                if(strcmp(b, "ls")==0){
+                printf("Ejecutando ls\n");
                 }else{
-                    printf("Comando erroneo, verifique en la ruta path\n");
+                    if(strcmp(b, "path")==0){
+                        printf("Ejecutando path\n");
+                        }else{
+                            printf("Comando erroneo, verifique en la ruta path\n");
+                        }
+                    }
                 }
-            }
-        }
+    }
     }while(strcmp(b, "exit")!=0);
     return(0);
 }
