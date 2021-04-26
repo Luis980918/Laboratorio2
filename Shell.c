@@ -6,9 +6,14 @@
 #include <unistd.h>
 
 void cd(char*path);
+void cmd_ls(char *path);
+void procesos(char *path);
+char *args[] = { "/bin/", NULL };
+
 
 int main(){
-    
+
+    char* param[4];
     char b[1024];
     char *delim;
     char *path;
@@ -20,8 +25,8 @@ int main(){
     fgets(b, 1024, stdin);
     delim=strtok(b, " ");
     if(b[strlen(delim)-1]=='\n'){
-        b[strlen(delim)-1]='\0';
-    }
+      b[strlen(delim)-1]='\0';
+   }
     
     while(delim!=NULL){
         if(c==1){
@@ -39,9 +44,11 @@ int main(){
             }else{
                 if(strcmp(b, "ls")==0){
                 printf("Ejecutando ls\n");
+                cmd_ls(path);
                 }else{
                     if(strcmp(b, "path")==0){
                         printf("Ejecutando path\n");
+                        procesos(path);
                         }else{
                             printf("Comando erroneo, verifique en la ruta path\n");
                         }
@@ -52,6 +59,7 @@ int main(){
     return(0);
 }
 
+/*
 void cd(char* path){
 
     printf("%c\n", path[strlen(path)-1]);
@@ -71,3 +79,67 @@ void cd(char* path){
         perror("getcwd() error");
     }
 }
+*/
+
+void cd(char* path){
+	//preguntamos si el argumento es diferente de null o vacio
+  if (path != NULL && path != "") {
+    if (chdir(path) != 0){ 
+      printf("error: el directorio <%s> no existe \n",path);   
+    }
+  } else {
+      printf("especifica un argumento \"cd\"\n");
+  }
+  system("pwd");
+  //return 1;		
+}
+
+/* Función listar el directorio
+ */
+void cmd_ls(char *path){
+    system("ls");
+   // return 1;
+}
+
+void procesos(char *path){
+    //printf("Hola");
+    //printf("%s", path);
+    
+    int pid;
+    pid = fork();
+    if(pid<0){
+        printf("error \n");
+    }else if(pid == 0){
+        char *ws[1];
+        printf("Hola soy Gohan\n");
+			execvp(args[0], ws);
+			printf("this should't print out\n");
+    }else{
+        printf("Hola Soy Goku\n");
+    }
+    }
+
+
+    /*
+    
+    void procesos(char *path){
+    //printf("Hola");
+    //printf("%s", path);
+    
+    int pid;
+    pid = fork();
+    if(pid<0){
+        printf("error \n");
+    }else if(pid == 0){
+        printf("Hola soy Gohan\n");
+      char *myargs[3];
+			myargs[0] = strdup("/bin/");
+			myargs[1] = strdup(path);
+			myargs[2] = NULL;
+			execvp(myargs[0], myargs);
+			printf("this should't print out\n");
+    }else{
+        printf("Hola Soy Goku\n");
+    }
+    }
+    */
