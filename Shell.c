@@ -8,7 +8,7 @@
 void cd(char*path);
 void cmd_ls(char *path);
 void procesos(char *path);
-char *args[] = { "/bin/", NULL };
+
 
 
 int main(){
@@ -101,6 +101,27 @@ void cmd_ls(char *path){
    // return 1;
 }
 
+void procesos(char * path){
+
+    char *args[] = { "/bin/", path, NULL };
+    int pid;
+    int status;
+    pid=fork(); /*proceso hijo*/
+    if(pid<0) printf("Error! no se pudo crear un proceso hijo");
+    if (pid==0){
+    status=execvp(path, args); /*Trata de ejecutar el comando y los argumentos que tenga*/
+        if(status){
+        printf("Error! %s no se reconoce o no se pudo ejecutar", args[1]);
+        //printf("Error! %s no se reconoce o no se pudo ejecutar", path);
+        exit(0); /*Como no se pudo ejecutar el comando cerramos el proceso hijo*/
+      }
+    }
+}
+
+
+/*
+
+
 void procesos(char *path){
     //printf("Hola");
     //printf("%s", path);
@@ -110,11 +131,13 @@ void procesos(char *path){
     if(pid<0){
         printf("error \n");
     }else if(pid == 0){
-        char *ws[1];
+        char *ws[1]=args[1];
         printf("Hola soy Gohan\n");
 			execvp(args[0], ws);
 			printf("this should't print out\n");
     }else{
+        printf("\n");
+        printf("\n");
         printf("Hola Soy Goku\n");
     }
     }
