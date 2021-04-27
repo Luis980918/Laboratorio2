@@ -26,7 +26,7 @@ int main(){
     delim=strtok(b, " ");
     if(b[strlen(delim)-1]=='\n'){
       b[strlen(delim)-1]='\0';
-   }
+    }
     
     while(delim!=NULL){
         if(c==1){
@@ -35,6 +35,10 @@ int main(){
         }
         delim=strtok(NULL, " "); 
         c++;
+    }
+    printf("%c", path[strlen(path)-1]);
+    if(path[strlen(path)-1]=='\n'){
+        path[strlen(path)-1]='\0';
     }
     c=0;
     if(strcmp(b, "exit")!=0){
@@ -59,7 +63,6 @@ int main(){
     return(0);
 }
 
-/*
 void cd(char* path){
 
     printf("%c\n", path[strlen(path)-1]);
@@ -79,90 +82,26 @@ void cd(char* path){
         perror("getcwd() error");
     }
 }
-*/
 
-void cd(char* path){
-	//preguntamos si el argumento es diferente de null o vacio
-  if (path != NULL && path != "") {
-    if (chdir(path) != 0){ 
-      printf("error: el directorio <%s> no existe \n",path);   
-    }
-  } else {
-      printf("especifica un argumento \"cd\"\n");
-  }
-  system("pwd");
-  //return 1;		
-}
-
-/* Función listar el directorio
- */
 void cmd_ls(char *path){
     system("ls");
    // return 1;
 }
 
 void procesos(char * path){
+    printf("%d\n", strcmp("-l", path));
 
-    char *args[] = { "/bin/", path, NULL };
+    char *args[] = { "/usr/bin/ls",path ,NULL };
     int pid;
     int status;
     pid=fork(); /*proceso hijo*/
     if(pid<0) printf("Error! no se pudo crear un proceso hijo");
     if (pid==0){
-    status=execvp(path, args); /*Trata de ejecutar el comando y los argumentos que tenga*/
-        if(status){
+    status=execv(args[0], args); /*Ejecuta el comando y los argumentos que tenga*/
+        if(status<0){
         printf("Error! %s no se reconoce o no se pudo ejecutar", args[1]);
         //printf("Error! %s no se reconoce o no se pudo ejecutar", path);
         exit(0); /*Como no se pudo ejecutar el comando cerramos el proceso hijo*/
       }
     }
 }
-
-
-/*
-
-
-void procesos(char *path){
-    //printf("Hola");
-    //printf("%s", path);
-    
-    int pid;
-    pid = fork();
-    if(pid<0){
-        printf("error \n");
-    }else if(pid == 0){
-        char *ws[1]=args[1];
-        printf("Hola soy Gohan\n");
-			execvp(args[0], ws);
-			printf("this should't print out\n");
-    }else{
-        printf("\n");
-        printf("\n");
-        printf("Hola Soy Goku\n");
-    }
-    }
-
-
-    /*
-    
-    void procesos(char *path){
-    //printf("Hola");
-    //printf("%s", path);
-    
-    int pid;
-    pid = fork();
-    if(pid<0){
-        printf("error \n");
-    }else if(pid == 0){
-        printf("Hola soy Gohan\n");
-      char *myargs[3];
-			myargs[0] = strdup("/bin/");
-			myargs[1] = strdup(path);
-			myargs[2] = NULL;
-			execvp(myargs[0], myargs);
-			printf("this should't print out\n");
-    }else{
-        printf("Hola Soy Goku\n");
-    }
-    }
-    */
