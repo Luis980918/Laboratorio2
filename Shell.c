@@ -91,17 +91,18 @@ void cmd_ls(char *path){
 void procesos(char * path){
     printf("%d\n", strcmp("-l", path));
 
-    char *args[] = { "/usr/bin/ls",path ,NULL };
+    char *args[] = { "/usr/bin/ls",path,"/mnt/c",NULL };
+    args[4]="holi";
+    printf("%s\n", args[4]);
     int pid;
     int status;
-    pid=fork(); /*proceso hijo*/
+    pid=fork();
     if(pid<0) printf("Error! no se pudo crear un proceso hijo");
     if (pid==0){
-    status=execv(args[0], args); /*Ejecuta el comando y los argumentos que tenga*/
+    status=execv(args[0], args);
         if(status<0){
         printf("Error! %s no se reconoce o no se pudo ejecutar", args[1]);
-        //printf("Error! %s no se reconoce o no se pudo ejecutar", path);
-        exit(0); /*Como no se pudo ejecutar el comando cerramos el proceso hijo*/
+        exit(0);
       }
     }
 }
