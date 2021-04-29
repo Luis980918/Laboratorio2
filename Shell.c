@@ -7,13 +7,14 @@
 
 void cd(char*path);
 void cmd_ls(char *path);
-void procesos(char *path);
+void procesos(char *path[], int c);
 
 
 
 int main(){
 
     char* param[4];
+    char *args[10];
     char b[1024];
     char *delim;
     char *path;
@@ -33,10 +34,16 @@ int main(){
             printf("%s", delim);
             path=delim;
         }
+        args[c]=delim;
         delim=strtok(NULL, " "); 
         c++;
     }
-    printf("%c", path[strlen(path)-1]);
+
+    for(int i=0; i<c; i++){
+        printf("%s\n", args[i]);
+    }
+
+    printf("%s\n",b);
     if(path[strlen(path)-1]=='\n'){
         path[strlen(path)-1]='\0';
     }
@@ -52,7 +59,9 @@ int main(){
                 }else{
                     if(strcmp(b, "path")==0){
                         printf("Ejecutando path\n");
-                        procesos(path);
+
+
+                        procesos(args, c);
                         }else{
                             printf("Comando erroneo, verifique en la ruta path\n");
                         }
@@ -88,12 +97,13 @@ void cmd_ls(char *path){
    // return 1;
 }
 
-void procesos(char * path){
-    printf("%d\n", strcmp("-l", path));
 
-    char *args[] = { "/usr/bin/ls",path,"/mnt/c",NULL };
-    args[4]="holi";
-    printf("%s\n", args[4]);
+void procesos(char *args[], int c){
+
+    for(int i=0; i<c; i++){
+        printf("%s", args[i]);
+    }
+
     int pid;
     int status;
     pid=fork();
