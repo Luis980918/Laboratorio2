@@ -102,7 +102,6 @@ void cmd_ls(char *path){
     system("ls");
    // return 1;
 }
-//void procesos2();
 
 void procesos(char *args[], int c){
     args[c-1]=NULL;
@@ -127,21 +126,4 @@ void procesos(char *args[], int c){
         exit(0);
       }
     }
-    //procesos2();
 }
-
-/*void procesos2(){
-    printf("\n\n\n\n");
-    char *args[]={"/usr/bin/ls", "-l", NULL};
-    int pid;
-    int status;
-    pid=fork();
-    if(pid<0) printf("Error! no se pudo crear un proceso hijo");
-    if (pid==0){
-    status=execv(args[0], args);
-        if(status<0){
-        printf("Error! %s no se reconoce o no se pudo ejecutar", args[1]);
-        exit(0);
-      }
-    }
-}*/
