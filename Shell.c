@@ -15,6 +15,7 @@ int main(){
 
     char* param[4];
     char *args[10];
+    
     char b[1024];
     char *delim;
     char *path;
@@ -31,23 +32,30 @@ int main(){
     
     while(delim!=NULL){
         if(c==1){
-            printf("%s", delim);
+            //printf("%s", delim);
             path=delim;
         }
-        args[c]=delim;
+        if(c!=0){
+            args[c-1]=delim;
+        }
         delim=strtok(NULL, " "); 
         c++;
     }
 
-    for(int i=0; i<c; i++){
-        printf("%s\n", args[i]);
+    for(int i=0; i<c-1; i++){
+        printf("%c\n", args[i][strlen(args[i])]);
+        if(args[i][strlen(args[i])-1]=='\n'){
+            args[i][strlen(args[i])-1]='\0';
+            
+        }
     }
+    
 
-    printf("%s\n",b);
+    printf("\n%s\n",b);
+
     if(path[strlen(path)-1]=='\n'){
         path[strlen(path)-1]='\0';
     }
-    c=0;
     if(strcmp(b, "exit")!=0){
         if(strcmp(b, "cd")==0){
             printf("Ejecutando cd\n");
@@ -59,8 +67,6 @@ int main(){
                 }else{
                     if(strcmp(b, "path")==0){
                         printf("Ejecutando path\n");
-
-
                         procesos(args, c);
                         }else{
                             printf("Comando erroneo, verifique en la ruta path\n");
@@ -96,14 +102,20 @@ void cmd_ls(char *path){
     system("ls");
    // return 1;
 }
-
+//void procesos2();
 
 void procesos(char *args[], int c){
-
-    for(int i=0; i<c; i++){
-        printf("%s", args[i]);
+    args[c-1]=NULL;
+    printf("%s\n", args[0]);
+    printf("\n%d\n\n\n", strcmp("/usr/bin/ls", args[0]));
+    if(strcmp(args[0], "/usr/bin/ls")==0){  
+        printf("Son iguales(Ruta)\n");
+        
     }
-
+    if(strcmp(args[1], "-l")==0){  
+        printf("Son iguales(argumento)\n");
+        
+    }
     int pid;
     int status;
     pid=fork();
@@ -115,4 +127,21 @@ void procesos(char *args[], int c){
         exit(0);
       }
     }
+    //procesos2();
 }
+
+/*void procesos2(){
+    printf("\n\n\n\n");
+    char *args[]={"/usr/bin/ls", "-l", NULL};
+    int pid;
+    int status;
+    pid=fork();
+    if(pid<0) printf("Error! no se pudo crear un proceso hijo");
+    if (pid==0){
+    status=execv(args[0], args);
+        if(status<0){
+        printf("Error! %s no se reconoce o no se pudo ejecutar", args[1]);
+        exit(0);
+      }
+    }
+}*/
