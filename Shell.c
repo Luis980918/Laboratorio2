@@ -7,6 +7,7 @@
 
 void cd(char*path);
 void cmd_ls(char *path);
+char *rutas[100];
 void procesos(char *path[], int c);
 
 
@@ -106,6 +107,18 @@ void cmd_ls(char *path){
 
 void procesos(char *args[], int c){
     args[c-1]=NULL;
+    rutas[0]="/usr/bin/ls";
+    int i=0;
+    while(rutas[i]!=NULL){
+        if(strcmp(args[0],rutas[i])==0){
+            printf("Halowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n");
+            break;
+        }
+        i++;
+    }
+
+
+
 
     int pid;
     int status;
