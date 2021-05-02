@@ -12,19 +12,21 @@ void procesos(char *path[], int c);
 
 
 int main(){
-
-    char* param[4];
-    char *args[10];
     
     char b[1024];
     char *delim;
     char *path;
-    int c=0;
+    char *holi;
 
     do{
-
+    int c=0;
+    char *args[10];
     printf("wish> ");
     fgets(b, 1024, stdin);
+    
+    
+
+
     delim=strtok(b, " ");
     if(b[strlen(delim)-1]=='\n'){
       b[strlen(delim)-1]='\0';
@@ -43,15 +45,10 @@ int main(){
     }
 
     for(int i=0; i<c-1; i++){
-        printf("%c\n", args[i][strlen(args[i])]);
         if(args[i][strlen(args[i])-1]=='\n'){
             args[i][strlen(args[i])-1]='\0';
-            
         }
     }
-    
-
-    printf("\n%s\n",b);
 
     if(path[strlen(path)-1]=='\n'){
         path[strlen(path)-1]='\0';
@@ -69,7 +66,11 @@ int main(){
                         printf("Ejecutando path\n");
                         procesos(args, c);
                         }else{
-                            printf("Comando erroneo, verifique en la ruta path\n");
+                            if(strcmp("\0", b)==0){
+                                printf("\n");
+                            }else{
+                                printf("Comando erroneo, verifique en la ruta path\n");
+                            }
                         }
                     }
                 }
@@ -105,24 +106,15 @@ void cmd_ls(char *path){
 
 void procesos(char *args[], int c){
     args[c-1]=NULL;
-    printf("%s\n", args[0]);
-    printf("\n%d\n\n\n", strcmp("/usr/bin/ls", args[0]));
-    if(strcmp(args[0], "/usr/bin/ls")==0){  
-        printf("Son iguales(Ruta)\n");
-        
-    }
-    if(strcmp(args[1], "-l")==0){  
-        printf("Son iguales(argumento)\n");
-        
-    }
+
     int pid;
     int status;
     pid=fork();
-    if(pid<0) printf("Error! no se pudo crear un proceso hijo");
+    if(pid<0) printf("\nError! no se pudo crear un proceso hijo\n");
     if (pid==0){
     status=execv(args[0], args);
         if(status<0){
-        printf("Error! %s no se reconoce o no se pudo ejecutar", args[1]);
+        printf("\nError! %s no se reconoce o no se pudo ejecutar\n", args[1]);
         exit(0);
       }
     }
