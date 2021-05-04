@@ -5,10 +5,14 @@
 #include <string.h>
 #include <unistd.h>
 
-void cd(char*path);
-void cmd_ls(char *path);
+void cd(char*comando);
+void cmd_ls(char *comando);
 char *rutas[100];
-void procesos(char *path[], int c);
+
+void procesos(char *comando[], int c);
+void path(char *r[], int c);
+int getPath(char *palabra);
+int getIndex();
 
 
 
@@ -16,8 +20,11 @@ int main(){
     
     char b[1024];
     char *delim;
-    char *path;
-    char *holi;
+    char *comando;
+    
+    for(int j=1;j<100;j++){
+        rutas[j]=NULL;
+    }
 
     do{
     int c=0;
@@ -25,8 +32,9 @@ int main(){
     printf("wish> ");
     fgets(b, 1024, stdin);
     
-    
-
+    for(int i=0;i<10; i++){
+        args[i]=NULL;
+    }
 
     delim=strtok(b, " ");
     if(b[strlen(delim)-1]=='\n'){
@@ -36,7 +44,7 @@ int main(){
     while(delim!=NULL){
         if(c==1){
             //printf("%s", delim);
-            path=delim;
+            comando=delim;
         }
         if(c!=0){
             args[c-1]=delim;
@@ -51,21 +59,22 @@ int main(){
         }
     }
 
-    if(path[strlen(path)-1]=='\n'){
-        path[strlen(path)-1]='\0';
+    if(comando[strlen(comando)-1]=='\n'){
+        comando[strlen(comando)-1]='\0';
     }
     if(strcmp(b, "exit")!=0){
         if(strcmp(b, "cd")==0){
             printf("Ejecutando cd\n");
-            cd(path);
+            cd(comando);
             }else{
                 if(strcmp(b, "ls")==0){
                 printf("Ejecutando ls\n");
-                cmd_ls(path);
+                cmd_ls(comando);
                 }else{
                     if(strcmp(b, "path")==0){
                         printf("Ejecutando path\n");
-                        procesos(args, c);
+                        //procesos(args, c);
+                        path(args, c);
                         }else{
                             if(strcmp("\0", b)==0){
                                 printf("\n");
@@ -80,11 +89,11 @@ int main(){
     return(0);
 }
 
-void cd(char* path){
+void cd(char* comando){
 
-    printf("%c\n", path[strlen(path)-1]);
-    path[strlen(path)-1]='\0';
-    char *directorio=path;
+    printf("%c\n", comando[strlen(comando)-1]);
+    comando[strlen(comando)-1]='\0';
+    char *directorio=comando;
     int i=chdir(directorio);
     chdir(directorio);
 
@@ -100,26 +109,25 @@ void cd(char* path){
     }
 }
 
-void cmd_ls(char *path){
+void cmd_ls(char *comando){
     system("ls");
    // return 1;
 }
 
 void procesos(char *args[], int c){
-    args[c-1]=NULL;
+    int contador=0;
+    //args[c-1]=NULL;
     rutas[0]="/usr/bin/ls";
     int i=0;
     while(rutas[i]!=NULL){
         if(strcmp(args[0],rutas[i])==0){
             printf("Halowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n");
-            break;
+            contador++;
         }
         i++;
+        break;
     }
-
-
-
-
+    printf("\n%d\n%d\n",i, contador);
     int pid;
     int status;
     pid=fork();
@@ -132,3 +140,43 @@ void procesos(char *args[], int c){
       }
     }
 }
+
+void path(char *r[], int c){
+    for(int i=0;i<c; i++){
+        if(r[i]!=NULL){
+            if(getPath(r[i])!=1){
+                printf("No existe\n");
+                getIndex();
+            }
+        }
+    }
+}
+
+int getPath(char *palabra){
+    rutas[0]="/usr/bin/";
+    rutas[1]="/usr/ban/";
+    int i=0;
+    int k=0;
+    for(int j=0;j<100;j++){
+        if(rutas[j]!=NULL){
+            k++;
+            if(strcmp(rutas[j], palabra)==0){
+                i=1;
+            }
+        }
+    }
+    //printf("%d\n", k);
+    return i;
+}
+
+int getIndex(){
+    int index=0;
+    for(int j=0;j<100;j++){
+        if(rutas[j]!=NULL){
+            index++;
+        }
+    }
+    printf("%d\n", index);
+    return index;
+}
+
