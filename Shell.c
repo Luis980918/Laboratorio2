@@ -25,8 +25,10 @@ int main(){
     for(int j=1;j<100;j++){
         rutas[j]=NULL;
     }
-
+    rutas[0]="/usr/bin/";
+    
     do{
+        
     int c=0;
     char *args[10];
     printf("wish> ");
@@ -144,27 +146,38 @@ void procesos(char *args[], int c){
 void path(char *r[], int c){
     for(int i=0;i<c; i++){
         if(r[i]!=NULL){
+            
             if(getPath(r[i])!=1){
-                printf("No existe\n");
-                getIndex();
+                printf("No existe Indice: %d\n", getIndex());
+                rutas[getIndex()]="k";
+                printf("Rutas: %s \n", rutas[i]);
+                
+            }else{
+                printf("La ruta que trata de agregar ya existe\n");
             }
         }
     }
 }
 
 int getPath(char *palabra){
-    rutas[0]="/usr/bin/";
-    rutas[1]="/usr/ban/";
+    
     int i=0;
     int k=0;
+    
     for(int j=0;j<100;j++){
         if(rutas[j]!=NULL){
+            
             k++;
+
+            printf("Palabra: %s \n", palabra);
+
             if(strcmp(rutas[j], palabra)==0){
+                
                 i=1;
             }
         }
     }
+    printf("Esta es la desición %d\n", i);
     //printf("%d\n", k);
     return i;
 }
@@ -173,10 +186,11 @@ int getIndex(){
     int index=0;
     for(int j=0;j<100;j++){
         if(rutas[j]!=NULL){
+            printf("Esta es la ruta: %s\n", rutas[j]);
             index++;
         }
     }
-    printf("%d\n", index);
+    
     return index;
 }
 
