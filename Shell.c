@@ -144,53 +144,18 @@ void procesos(char *args[], int c){
 }
 
 void path(char *r[], int c){
+    for(int i=0;i<100; i++){
+        rutas[i]=NULL;
+    }
     for(int i=0;i<c; i++){
         if(r[i]!=NULL){
-            
-            if(getPath(r[i])!=1){
-                printf("No existe Indice: %d\n", getIndex());
-                rutas[getIndex()]="k";
-                printf("Rutas: %s \n", rutas[i]);
-                
+            //printf("%s\n", r[i]);
+            if(access(r[i], X_OK)==0){
+                rutas[i]=r[i];
+                printf("%s\n", rutas[i]);
             }else{
-                printf("La ruta que trata de agregar ya existe\n");
+                printf("La ruta %s no existe\n", r[i]);
             }
         }
     }
 }
-
-int getPath(char *palabra){
-    
-    int i=0;
-    int k=0;
-    
-    for(int j=0;j<100;j++){
-        if(rutas[j]!=NULL){
-            
-            k++;
-
-            printf("Palabra: %s \n", palabra);
-
-            if(strcmp(rutas[j], palabra)==0){
-                
-                i=1;
-            }
-        }
-    }
-    printf("Esta es la desición %d\n", i);
-    //printf("%d\n", k);
-    return i;
-}
-
-int getIndex(){
-    int index=0;
-    for(int j=0;j<100;j++){
-        if(rutas[j]!=NULL){
-            printf("Esta es la ruta: %s\n", rutas[j]);
-            index++;
-        }
-    }
-    
-    return index;
-}
-
