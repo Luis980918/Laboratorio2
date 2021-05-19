@@ -7,6 +7,7 @@
 
 void cd(char*comando);
 void cmd_ls(char *comando);
+void ls(char *r[], int c);
 char *rutas[100];
 
 void procesos(char *comando[], int c);
@@ -71,11 +72,17 @@ int main(){
             }else{
                 if(strcmp(b, "ls")==0){
                 printf("Ejecutando ls\n");
-                cmd_ls(comando);
+                //cmd_ls(comando);
+                ls(args, c);
                 }else{
                     if(strcmp(b, "path")==0){
                         printf("Ejecutando path\n");
                         //procesos(args, c);
+                        for(int i=0;i<100;i++){
+                            if(rutas[i]!=NULL){
+                                printf("%s\n", rutas[i]);
+                            }
+                        }
                         path(args, c);
                         }else{
                             if(strcmp("\0", b)==0){
@@ -152,9 +159,24 @@ void path(char *r[], int c){
             //printf("%s\n", r[i]);
             if(access(r[i], X_OK)==0){
                 rutas[i]=r[i];
-                printf("%s\n", rutas[i]);
+                //printf("%s\n", rutas[i]);
             }else{
                 printf("La ruta %s no existe\n", r[i]);
+            }
+        }
+    }
+}
+
+void ls(char *r[], int c){
+    
+    int cont=0;
+    for(int i=0;i<c;i++){
+        if(r[i]!=NULL){
+            if(strcmp(r[i], ">")==0){
+                cont++;
+            }
+            if(cont>0 && strcmp(r[i], ">")!=0){
+                printf("%s\n", r[i]);
             }
         }
     }
