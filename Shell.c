@@ -10,7 +10,7 @@ void cmd_ls(char *comando);
 void ls(char *r[], int c);
 char *rutas[100];
 
-void procesos(char *comando[], int c);
+void procesos(char* b, char *comando[], int c);
 void path(char *r[], int c);
 int getPath(char *palabra);
 int getIndex();
@@ -70,30 +70,18 @@ int main(){
             printf("Ejecutando cd\n");
             cd(comando);
             }else{
-                if(strcmp(b, "ls")==0){
-                printf("Ejecutando ls\n");
-                //cmd_ls(comando);
-                ls(args, c);
+                if(strcmp(b, "path")==0){
+                    printf("Ejecutando path\n");
+                    path(args, c);
                 }else{
-                    if(strcmp(b, "path")==0){
-                        printf("Ejecutando path\n");
-                        //procesos(args, c);
-                        for(int i=0;i<100;i++){
-                            if(rutas[i]!=NULL){
-                                printf("%s\n", rutas[i]);
-                            }
-                        }
-                        path(args, c);
-                        }else{
-                            if(strcmp("\0", b)==0){
-                                printf("\n");
-                            }else{
-                                printf("Comando erroneo, verifique en la ruta path\n");
-                            }
-                        }
+                    if(strcmp("\0", b)==0){
+                        printf("\n");
+                    }else{
+                        procesos(b, args, c);
                     }
                 }
-    }
+            }
+        }
     }while(strcmp(b, "exit")!=0);
     return(0);
 }
@@ -123,30 +111,40 @@ void cmd_ls(char *comando){
    // return 1;
 }
 
-void procesos(char *args[], int c){
-    int contador=0;
-    //args[c-1]=NULL;
-    rutas[0]="/usr/bin/ls";
-    int i=0;
-    while(rutas[i]!=NULL){
-        if(strcmp(args[0],rutas[i])==0){
-            printf("Halowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n");
-            contador++;
+void procesos(char* b, char *args[], int c){
+    char cat[1024];
+    char *arguments[100];
+    char *ruta;
+    int ejecutar=0;
+    for(int i=0; i<100;i++){
+        if(rutas[i]!=NULL){
+            strcpy(cat, rutas[i]);
+            ruta=strcat(cat, b);
+            if(access(ruta, X_OK)==0){
+                    printf("%c\n", ruta[strlen(ruta)]);
+                    ruta[strlen(ruta)]='\0';
+                    arguments[0]=ruta;
+                    for(int i=0; i<c; i++){
+                        if(args[i]!=NULL){
+                            printf("%s\n", args[i]);
+                            arguments[i+1]=args[i];
+                        }
+                    }
+                    int pid;
+                    int status;
+                    pid=fork();
+                    if(pid<0) printf("\nError! no se pudo crear un proceso hijo\n");
+                    if (pid==0){
+                    status=execv(ruta, arguments);
+                        if(status<0){
+                        printf("\nComando erroneo, verifique en la ruta path%s\n", args[1]);
+                        exit(0);
+                    }
+                }
+            }else{
+                printf("\nComando erroneo, verifique en la ruta path%s\n", args[1]);
+            }
         }
-        i++;
-        break;
-    }
-    printf("\n%d\n%d\n",i, contador);
-    int pid;
-    int status;
-    pid=fork();
-    if(pid<0) printf("\nError! no se pudo crear un proceso hijo\n");
-    if (pid==0){
-    status=execv(args[0], args);
-        if(status<0){
-        printf("\nError! %s no se reconoce o no se pudo ejecutar\n", args[1]);
-        exit(0);
-      }
     }
 }
 
