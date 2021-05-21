@@ -73,6 +73,11 @@ int main(){
                 if(strcmp(b, "path")==0){
                     printf("Ejecutando path\n");
                     path(args, c);
+                    for(int i=0;i<100;i++){
+                        if(rutas[i]!=NULL){
+                            printf("%s\n",rutas[i]);
+                        }
+                    }
                 }else{
                     if(strcmp("\0", b)==0){
                         printf("\n");
@@ -118,6 +123,7 @@ void procesos(char* b, char *args[], int c){
     int ejecutar=0;
     for(int i=0; i<100;i++){
         if(rutas[i]!=NULL){
+            printf("%s\n", rutas[i]);
             strcpy(cat, rutas[i]);
             ruta=strcat(cat, b);
             if(access(ruta, X_OK)==0){
@@ -149,14 +155,13 @@ void procesos(char* b, char *args[], int c){
 }
 
 void path(char *r[], int c){
-    for(int i=0;i<100; i++){
-        rutas[i]=NULL;
-    }
+    char * p;
     for(int i=0;i<c; i++){
         if(r[i]!=NULL){
+            strcpy(p, r[i]);
             //printf("%s\n", r[i]);
             if(access(r[i], X_OK)==0){
-                rutas[i]=r[i];
+                rutas[i]=p;
                 //printf("%s\n", rutas[i]);
             }else{
                 printf("La ruta %s no existe\n", r[i]);
