@@ -181,21 +181,6 @@ void path(char *r[], int c){
     }
 }
 
-void ls(char *r[], int c){
-   /*  
-    int cont=0;
-    for(int i=0;i<c;i++){
-        if(r[i]!=NULL){
-            if(strcmp(r[i], ">")==0){
-                cont++;
-            }
-            if(cont>0 && strcmp(r[i], ">")!=0){
-                printf("%s\n", r[i]);
-            }
-        }
-    } */
-}
-
 int tokenizo(char * b, char * argsz[]){
 
     //para redir
