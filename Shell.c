@@ -203,13 +203,17 @@ int rc = fork();
 			fprintf(stderr, "fork failed\n");
 			exit(1);
 		}else if(rc == 0){
-
-            char *arc = strtok(b, ">");
+            char *arc;
+            
+            if(arc = strtok(b, ">")){
             arc = strtok(NULL, "> ");
                   
                 if(arc[strlen(arc)-1]=='\n'){
                     arc[strlen(arc)-1]='\0';
+                    
                 }
+
+                printf("hoy");
 
             int i;
             for(i=0;i<strlen(b);i++) argsz[i]=NULL;
@@ -217,23 +221,22 @@ int rc = fork();
             argsz[i]=b; 
             while((argsz[++i]=strtok(NULL," "))!=NULL);
 
-            int err = open(arc, O_RDWR|O_CREAT|O_APPEND, 0666);
+            int err = open(arc, O_WRONLY|O_CREAT|O_TRUNC,0666);
             
-            if (-1 == err){
-                perror(" opening output"); 
-                return 225;
-            }
-            
+                       
             if (- 1 == dup2(err, fileno(stdout))){
                 perror("No se pudo"); 
                 return 225;
             }
-             
+           
             execvp(argsz[0], argsz);
 
 		}else{
 			int rc_wait = wait(NULL);
 		}
+
+        }
+
  		return 0;
 
      
