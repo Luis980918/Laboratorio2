@@ -20,8 +20,20 @@ int getIndex();
 
 
 
-int main(){
+int main(int argc, char* argv[]){
+
+
+    if(argv[1]){
+        FILE* flujo=fopen(argv[1], "rb");
+	    char cadena[100];
+	
+        while(feof(flujo)==0){
+            fscanf(flujo, "%s\n", cadena);
+            printf("%s\n", cadena);
+        }
+    }
     
+
     char b[1024];
     char *delim;
     char *comando;
