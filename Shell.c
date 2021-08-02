@@ -4,12 +4,15 @@
 #include <malloc.h>
 #include <string.h>
 #include <unistd.h>
+#include<sys/wait.h>
+#include<fcntl.h>
 
 void cd(char*comando);
 void cmd_ls(char *comando);
 void ls(char *r[], int c);
 char *rutas[100];
 
+int redir2 (char * b, int c);
 void procesos(char* b, char *comando[], int c);
 void path(char *r[], int c);
 int getPath(char *palabra);
@@ -34,6 +37,10 @@ int main(){
     char *args[10];
     printf("wish> ");
     fgets(b, 1024, stdin);
+
+    redir2 (b, c);
+
+    //tokenizo(b, argsz);//separo por argz
     
     for(int i=0;i<10; i++){
         args[i]=NULL;
@@ -43,6 +50,7 @@ int main(){
     if(b[strlen(delim)-1]=='\n'){
       b[strlen(delim)-1]='\0';
     }
+    
     
     while(delim!=NULL){
         if(c==1){
@@ -65,6 +73,9 @@ int main(){
     if(comando[strlen(comando)-1]=='\n'){
         comando[strlen(comando)-1]='\0';
     }
+
+    
+
     if(strcmp(b, "exit")!=0){
         if(strcmp(b, "cd")==0){
             printf("Ejecutando cd\n");
@@ -170,17 +181,63 @@ void path(char *r[], int c){
     }
 }
 
-void ls(char *r[], int c){
-    
-    int cont=0;
-    for(int i=0;i<c;i++){
-        if(r[i]!=NULL){
-            if(strcmp(r[i], ">")==0){
-                cont++;
+int tokenizo(char * b, char * argsz[]){
+
+    //para redir
+    int u = b[strlen(b)];  
+    int v;
+    for(v=0;v<u;v++) argsz[v]=NULL;
+    strtok(b," "), v=0; 
+    argsz[v]=b; 
+    while((argsz[++v]=strtok(NULL," "))!=NULL);
+    //para redir
+       
+}
+
+int redir2 (char * b, int c) {
+char *argsx[15];
+char *argsz[10];
+
+int rc = fork();
+		if(rc < 0){
+			fprintf(stderr, "fork failed\n");
+			exit(1);
+		}else if(rc == 0){
+            char *arc;
+            
+            if(arc = strtok(b, ">")){
+            arc = strtok(NULL, "> ");
+                  
+                if(arc[strlen(arc)-1]=='\n'){
+                    arc[strlen(arc)-1]='\0';
+                    
+                }
+
+                printf("hoy");
+
+            int i;
+            for(i=0;i<strlen(b);i++) argsz[i]=NULL;
+            strtok(b," "), i=0; 
+            argsz[i]=b; 
+            while((argsz[++i]=strtok(NULL," "))!=NULL);
+
+            int err = open(arc, O_WRONLY|O_CREAT|O_TRUNC,0666);
+            
+                       
+            if (- 1 == dup2(err, fileno(stdout))){
+                perror("No se pudo"); 
+                return 225;
             }
-            if(cont>0 && strcmp(r[i], ">")!=0){
-                printf("%s\n", r[i]);
-            }
+           
+            execvp(argsz[0], argsz);
+
+		}else{
+			int rc_wait = wait(NULL);
+		}
+
         }
-    }
+
+ 		return 0;
+
+     
 }
