@@ -13,7 +13,7 @@ void ls(char *r[], int c);
 char *rutas[100];
 
 int redir2 (char * b, int c);
-void procesos(char* b, char *comando[], int c);
+void procesos(char* b, char *comando[], int c, char* cdir);
 void path(char *r[], int c);
 int getPath(char *palabra);
 int getIndex();
@@ -23,7 +23,7 @@ int getIndex();
 int main(int argc, char* argv[]){
 
 
-    if(argv[1]){
+    /*if(argv[1]){
         FILE* flujo=fopen(argv[1], "rb");
 	    char cadena[100];
 	
@@ -31,12 +31,26 @@ int main(int argc, char* argv[]){
             fscanf(flujo, "%s\n", cadena);
             printf("%s\n", cadena);
         }
-    }
+    }*/
     
 
     char b[1024];
     char *delim;
     char *comando;
+    char cdir[1024];
+    
+    /*Para los commands, separa las cadenas de texto con su respectivo &
+    en este caso solo falta implementar los wait en diversos procesos*/
+    /*char cadena[] = "";
+    strcpy(cadena, b);
+    char *token = strtok(cadena, " & ");
+    if(token != NULL){
+        while(token != NULL){
+            // Sólo en la primera pasamos la cadena; en las siguientes pasamos NULL
+            printf("Token: %s\n", token);
+            token = strtok(NULL, " & ");
+        }
+    }*/
     
     for(int j=1;j<100;j++){
         rutas[j]=NULL;
@@ -50,7 +64,7 @@ int main(int argc, char* argv[]){
     printf("wish> ");
     fgets(b, 1024, stdin);
 
-    redir2 (b, c);
+    strcpy(cdir, b);
 
     //tokenizo(b, argsz);//separo por argz
     
@@ -96,16 +110,11 @@ int main(int argc, char* argv[]){
                 if(strcmp(b, "path")==0){
                     printf("Ejecutando path\n");
                     path(args, c);
-                    for(int i=0;i<100;i++){
-                        if(rutas[i]!=NULL){
-                            printf("%s\n",rutas[i]);
-                        }
-                    }
                 }else{
                     if(strcmp("\0", b)==0){
                         printf("\n");
                     }else{
-                        procesos(b, args, c);
+                        procesos(b, args, c, cdir);
                     }
                 }
             }
@@ -139,11 +148,12 @@ void cmd_ls(char *comando){
    // return 1;
 }
 
-void procesos(char* b, char *args[], int c){
+void procesos(char* b, char *args[], int c, char* cdir){
     char cat[1024];
     char *arguments[100];
     char *ruta;
     int ejecutar=0;
+    redir2(cdir, c);
     for(int i=0; i<100;i++){
         if(rutas[i]!=NULL){
             printf("%s\n", rutas[i]);
@@ -155,7 +165,6 @@ void procesos(char* b, char *args[], int c){
                     arguments[0]=ruta;
                     for(int i=0; i<c; i++){
                         if(args[i]!=NULL){
-                            printf("%s\n", args[i]);
                             arguments[i+1]=args[i];
                         }
                     }
@@ -173,7 +182,8 @@ void procesos(char* b, char *args[], int c){
             }else{
                 printf("\nComando erroneo, verifique en la ruta path%s\n", args[1]);
             }
-        }
+        }   
+
     }
 }
 
@@ -224,8 +234,6 @@ int rc = fork();
                     arc[strlen(arc)-1]='\0';
                     
                 }
-
-                printf("hoy");
 
             int i;
             for(i=0;i<strlen(b);i++) argsz[i]=NULL;
