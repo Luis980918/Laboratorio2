@@ -13,7 +13,7 @@ void ls(char *r[], int c);
 char *rutas[100];
 
 int redir2 (char * b, int c);
-void procesos(char* b, char *comando[], int c, char* cdir);
+int procesos(char* b, char *comando[], int c, char* cdir);
 void path(char *r[], int c);
 int getPath(char *palabra);
 int getIndex();
@@ -72,15 +72,14 @@ int main(int argc, char* argv[]){
         args[i]=NULL;
     }
 
+    
     delim=strtok(b, " ");
     if(b[strlen(delim)-1]=='\n'){
-      b[strlen(delim)-1]='\0';
+        b[strlen(delim)-1]='\0';
     }
-    
-    
+                 
     while(delim!=NULL){
         if(c==1){
-            //printf("%s", delim);
             comando=delim;
         }
         if(c!=0){
@@ -89,17 +88,12 @@ int main(int argc, char* argv[]){
         delim=strtok(NULL, " "); 
         c++;
     }
-
+    
     for(int i=0; i<c-1; i++){
         if(args[i][strlen(args[i])-1]=='\n'){
             args[i][strlen(args[i])-1]='\0';
         }
     }
-
-    if(comando[strlen(comando)-1]=='\n'){
-        comando[strlen(comando)-1]='\0';
-    }
-
     
 
     if(strcmp(b, "exit")!=0){
@@ -124,8 +118,6 @@ int main(int argc, char* argv[]){
 }
 
 void cd(char* comando){
-
-    printf("%c\n", comando[strlen(comando)-1]);
     comando[strlen(comando)-1]='\0';
     char *directorio=comando;
     int i=chdir(directorio);
@@ -148,43 +140,46 @@ void cmd_ls(char *comando){
    // return 1;
 }
 
-void procesos(char* b, char *args[], int c, char* cdir){
+int procesos(char* b, char *args[], int c, char* cdir){
     char cat[1024];
     char *arguments[100];
     char *ruta;
     int ejecutar=0;
-    redir2(cdir, c);
-    for(int i=0; i<100;i++){
-        if(rutas[i]!=NULL){
-            printf("%s\n", rutas[i]);
-            strcpy(cat, rutas[i]);
-            ruta=strcat(cat, b);
-            if(access(ruta, X_OK)==0){
-                    printf("%c\n", ruta[strlen(ruta)]);
-                    ruta[strlen(ruta)]='\0';
-                    arguments[0]=ruta;
-                    for(int i=0; i<c; i++){
-                        if(args[i]!=NULL){
-                            arguments[i+1]=args[i];
+    int pid;
+    if(strstr(cdir, ">")!=NULL){
+        pid = redir2(cdir, c);
+    }else{
+        for(int i=0; i<100;i++){
+            if(rutas[i]!=NULL){
+                printf("%s\n", rutas[i]);
+                strcpy(cat, rutas[i]);
+                ruta=strcat(cat, b);
+                if(access(ruta, X_OK)==0){
+                        printf("%c\n", ruta[strlen(ruta)]);
+                        ruta[strlen(ruta)]='\0';
+                        arguments[0]=ruta;
+                        for(int i=0; i<c; i++){
+                            if(args[i]!=NULL){
+                                arguments[i+1]=args[i];
+                            }
+                        }
+                        int status;
+                        pid=fork();
+                        if(pid<0) printf("\nError! no se pudo crear un proceso hijo\n");
+                        if (pid==0){
+                        status=execv(ruta, arguments);
+                            if(status<0){
+                            printf("\nComando erroneo, verifique en la ruta path%s\n", args[1]);
+                            exit(0);
                         }
                     }
-                    int pid;
-                    int status;
-                    pid=fork();
-                    if(pid<0) printf("\nError! no se pudo crear un proceso hijo\n");
-                    if (pid==0){
-                    status=execv(ruta, arguments);
-                        if(status<0){
-                        printf("\nComando erroneo, verifique en la ruta path%s\n", args[1]);
-                        exit(0);
-                    }
+                }else{
+                    printf("\nComando erroneo, verifique en la ruta path%s\n", args[1]);
                 }
-            }else{
-                printf("\nComando erroneo, verifique en la ruta path%s\n", args[1]);
-            }
-        }   
-
+            }   
+        }
     }
+    return pid;
 }
 
 void path(char *r[], int c){
@@ -257,7 +252,7 @@ int rc = fork();
 
         }
 
- 		return 0;
+    return rc;
 
      
 }
