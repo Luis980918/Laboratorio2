@@ -15,6 +15,7 @@ char *rutas[100];
 int redir2 (char * b, int c);
 int procesos(char* b, char *comando[], int c, char* cdir);
 void path(char *r[], int c);
+void cmds(char* b);
 int getPath(char *palabra);
 int getIndex();
 
@@ -39,18 +40,6 @@ int main(int argc, char* argv[]){
     char *comando;
     char cdir[1024];
     
-    /*Para los commands, separa las cadenas de texto con su respectivo &
-    en este caso solo falta implementar los wait en diversos procesos*/
-    /*char cadena[] = "";
-    strcpy(cadena, b);
-    char *token = strtok(cadena, " & ");
-    if(token != NULL){
-        while(token != NULL){
-            // Sólo en la primera pasamos la cadena; en las siguientes pasamos NULL
-            printf("Token: %s\n", token);
-            token = strtok(NULL, " & ");
-        }
-    }*/
     
     for(int j=1;j<100;j++){
         rutas[j]=NULL;
@@ -115,6 +104,58 @@ int main(int argc, char* argv[]){
         }
     }while(strcmp(b, "exit")!=0);
     return(0);
+}
+
+void cmds(char* cadenaCompleta){
+    char *token = strtok(cadenaCompleta, " & ");
+    if(token != NULL){
+        while(token != NULL){
+            // Sólo en la primera pasamos la cadena; en las siguientes pasamos NULL
+            printf("Token: %s\n", token);
+            token = strtok(NULL, " & ");
+            if(token != NULL){
+                int c=0;
+                char *args[10];
+                printf("wish> ");
+                char b[1024];
+                strcpy(b, token);
+                char *delim;
+                char *comando;
+                char cdir[1024];
+                strcpy(cdir, b);
+                for(int i=0;i<10; i++){
+                    args[i]=NULL;
+                }
+                
+                delim=strtok(b, " ");
+                if(b[strlen(delim)-1]=='\n'){
+                    b[strlen(delim)-1]='\0';
+                }
+                            
+                while(delim!=NULL){
+                    if(c==1){
+                        comando=delim;
+                    }
+                    if(c!=0){
+                        args[c-1]=delim;
+                    }
+                    delim=strtok(NULL, " "); 
+                    c++;
+                }
+                
+                for(int i=0; i<c-1; i++){
+                    if(args[i][strlen(args[i])-1]=='\n'){
+                        args[i][strlen(args[i])-1]='\0';
+                    }
+                }
+                int returnStatus=0;
+                waitpid(procesos(b, args, c, cdir),&returnStatus,0);                        
+                if (returnStatus == 1){
+                    printf("Error xd");    
+                }
+            }
+        }
+    }
 }
 
 void cd(char* comando){
