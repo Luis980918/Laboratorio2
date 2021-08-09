@@ -21,19 +21,7 @@ int getIndex();
 
 
 
-int main(int argc, char* argv[]){
-
-
-    /*if(argv[1]){
-        FILE* flujo=fopen(argv[1], "rb");
-	    char cadena[100];
-	
-        while(feof(flujo)==0){
-            fscanf(flujo, "%s\n", cadena);
-            printf("%s\n", cadena);
-        }
-    }*/
-    
+int main(int argc, char* argv[]){    
 
     char b[1024];
     char *delim;
@@ -159,26 +147,24 @@ void cmds(char* cadenaCompleta){
 }
 
 void cd(char* comando){
-    comando[strlen(comando)-1]='\0';
-    char *directorio=comando;
-    int i=chdir(directorio);
-    chdir(directorio);
 
-    printf("%d\n",i);
-
-    char cwd[1024];
-
-    if (getcwd(cwd, sizeof(cwd)) != NULL){
-        fprintf(stdout, "Directorio actual: %s\n", cwd);
+  printf("%s\n", comando);
+  if (comando != NULL && comando != "") {
+    if (chdir(comando) != 0){ 
+      printf("error: el directorio (%s) no existe \n", comando);   
+      printError();
     }
-    else{
-        perror("getcwd() error");
-    }
+  } else {
+      printf("especifica un argumento \"cd\"\n");
+      printError();
+  }
+  system("pwd");
+
+		
 }
 
 void cmd_ls(char *comando){
     system("ls");
-   // return 1;
 }
 
 int procesos(char* b, char *args[], int c, char* cdir){
@@ -227,11 +213,9 @@ void path(char *r[], int c){
     char * p;
     for(int i=0;i<c; i++){
         if(r[i]!=NULL){
-            strcpy(p, r[i]);
-            //printf("%s\n", r[i]);
+            strcpy(p, r[i]);        
             if(access(r[i], X_OK)==0){
-                rutas[i]=p;
-                //printf("%s\n", rutas[i]);
+                rutas[i]=p;                
             }else{
                 printf("La ruta %s no existe\n", r[i]);
             }
