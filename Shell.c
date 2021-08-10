@@ -9,6 +9,7 @@
 
 void cd(char*comando);
 void cmd_ls(char *comando);
+char ERROR_MESSAGE[128] = "An error has occurred\n";
 void ls(char *r[], int c);
 char *rutas[100];
 
@@ -18,6 +19,12 @@ void path(char *r[], int c);
 void cmds(char* b);
 int getPath(char *palabra);
 int getIndex();
+
+void printError(){
+        write(STDERR_FILENO, ERROR_MESSAGE, strlen(ERROR_MESSAGE));
+        exit(1);
+        
+}
 
 
 
@@ -187,7 +194,7 @@ int procesos(char* b, char *args[], int c, char* cdir){
                         arguments[0]=ruta;
                         for(int i=0; i<c; i++){
                             if(args[i]!=NULL){
-                                arguments[i+1]=args[i];
+                                arguments[i+1]=args[i];                                
                             }
                         }
                         int status;
@@ -197,11 +204,13 @@ int procesos(char* b, char *args[], int c, char* cdir){
                         status=execv(ruta, arguments);
                             if(status<0){
                             printf("\nComando erroneo, verifique en la ruta path%s\n", args[1]);
+                            printError();
                             exit(0);
                         }
                     }
                 }else{
                     printf("\nComando erroneo, verifique en la ruta path%s\n", args[1]);
+                    printError();
                 }
             }   
         }
@@ -218,6 +227,7 @@ void path(char *r[], int c){
                 rutas[i]=p;                
             }else{
                 printf("La ruta %s no existe\n", r[i]);
+                printError();
             }
         }
     }
@@ -266,6 +276,7 @@ int rc = fork();
                        
             if (- 1 == dup2(err, fileno(stdout))){
                 perror("No se pudo"); 
+                printError();
                 return 225;
             }
            
